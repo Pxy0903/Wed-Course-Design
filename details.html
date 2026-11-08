@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景点详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="details.css">
+    <style>
+        /* 可以在这里添加全局平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-box">
+        <div class="banner-title"></div>
+        <div class="banner-wrap">
+            <div class="banner-list"></div>
+        </div>
+        <button class="btn-left">&lt;</button>
+        <button class="btn-right">&gt;</button>
+        <div class="dot-group"></div>
+        <div class="tip-name"></div>
+    </div>
+    
+    <div class="content-section">
+        <div class="section-header">
+            <h2>精选景点推荐</h2>
+            <p></p>
+        </div>
+        
+        <div class="split-layout" id="splitLayout">
+            <div class="list-sidebar" id="listSidebar"></div>
+            
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-content">
+                    <h2 id="detailTitle">请选择一个景点</h2>
+                    <div class="detail-meta" id="detailMeta"></div>
+
+                    <div class="detail-banner" id="detailBanner" style="display: none;">
+                        <div class="detail-banner-wrap">
+                            <div class="detail-banner-list" id="detailBannerList"></div>
+                        </div>
+                        <button class="detail-btn-left" id="detailBtnLeft">&lt;</button>
+                        <button class="detail-btn-right" id="detailBtnRight">&gt;</button>
+                        <div class="detail-dot-group" id="detailDotGroup"></div>
+                    </div>
+                    
+                    <div class="detail-desc-box">
+                        <h3>景点介绍</h3>
+                        <p id="detailDesc">点击左侧列表查看详细介绍...</p>
+                    </div>
+                    <div class="detail-info-grid" id="detailInfoGrid" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="details.js"></script>
+</body>
+</html>

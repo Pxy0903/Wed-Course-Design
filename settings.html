@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>环球名胜览胜 - 账号设置</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./settings.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1677ff',
+                        travel: '#0ea5e9',
+                        sand: '#f5f5f4'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-travel flex items-center gap-2">
+                <i class="fa-solid fa-globe"></i>
+                <span class="brand-text">环球名胜览胜</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-6 shrink-0">
+                <nav class="flex items-center gap-6 shrink-0">
+                    <a href="index.html" class="nav-link whitespace-nowrap">首页</a>
+                    <a href="favourites.html" class="nav-link whitespace-nowrap">收藏</a>
+                    <a href="settings.html" class="nav-link whitespace-nowrap">设置</a>
+                </nav>
+                <button id="backFavBtn" class="shrink-0 bg-travel hover:bg-primary text-white px-4 py-1.5 rounded-full transition-colors whitespace-nowrap">
+                    <i class="fa-solid fa-heart mr-1"></i>返回收藏
+                </button>
+            </div>
+
+            <button class="md:hidden text-xl shrink-0" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4 border-t">
+            <div class="flex flex-col gap-3 py-3">
+                <a href="index.html" class="hover:text-travel">首页</a>
+                <a href="favourites.html" class="hover:text-travel">收藏</a>
+                <a href="settings.html" class="hover:text-travel">设置</a>
+            </div>
+            <button id="mobileBackFavBtn" class="w-full bg-travel hover:bg-primary text-white py-2 rounded transition-colors">
+                返回收藏
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="settings-page">
+            <div class="settings-hero">
+                <p class="eyebrow">ACCOUNT</p>
+                <h1>账号设置</h1>
+                <p class="hero-desc">在这里修改昵称和密码，保存后会同步到收藏数据和登录状态。</p>
+            </div>
+
+            <section class="settings-shell">
+                <div id="accountSettingsPanel" class="settings-panel"></div>
+            </section>
+        </section>
+    </main>
+
+    <div id="toastMsg" class="toast"></div>
+
+    <script>
+    const toastEl = document.getElementById('toastMsg');
+    const accountSettingsPanel = document.getElementById('accountSettingsPanel');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const backFavBtn = document.getElementById('backFavBtn');
+    const mobileBackFavBtn = document.getElementById('mobileBackFavBtn');
+
+    function showToast(msg, duration) {
+        if (!toastEl) return;
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastEl._timer);
+        toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), duration || 2000);
+    }
+
+    function getUserKey(username) {
+        return `user_${username}`;
+    }
+
+    function readUser(username) {
+        if (!username) return null;
+        try {
+            return JSON.parse(localStorage.getItem(getUserKey(username)) || 'null');
+        } catch {
+            return null;
+        }
+    }
+
+    function renameStorageKey(oldKey, newKey) {
+        const value = localStorage.getItem(oldKey);
+        if (value === null) return;
+        localStorage.setItem(newKey, value);
+        localStorage.removeItem(oldKey);
+    }
+
+    function renderAccountSettingsPage() {
+        if (!accountSettingsPanel) return;
+        const username = localStorage.getItem('lastUser');
+        if (!username) {
+            accountSettingsPanel.innerHTML = `
+                <div class="account-empty">
+                    <i class="fas fa-lock"></i>
+                    <div>
+                        <strong>未登录</strong>
+                        <p>请先登录后再修改账号信息</p>
+                    </div>
+                </div>
+                <button class="settings-login-btn" type="button" onclick="window.location.href='index.html'">去登录</button>
+            `;
+            return;
+        }
+
+        accountSettingsPanel.innerHTML = `
+            <div class="account-summary">
+                <div class="avatar">${username.charAt(0).toUpperCase()}</div>
+                <div>
+                    <h2>${username}</h2>
+                    <p>旅行收藏家</p>
+                </div>
+            </div>
+
+            <div class="account-grid">
+                <form class="settings-card" id="nicknameForm">
+                    <div class="settings-card-head">
+                        <div class="settings-icon"><i class="fas fa-id-card"></i></div>
+                        <div>
+                            <h2>修改昵称</h2>
+                            <p>当前昵称：${username}</p>
+                        </div>
+                    </div>
+                    <div class="settings-form">
+                        <label for="newNickname">新昵称</label>
+                        <input id="newNickname" type="text" value="${username}" autocomplete="username" maxlength="20" placeholder="请输入新昵称">
+                        <button type="submit">保存昵称</button>
+                    </div>
+                </form>
+
+                <form class="settings-card" id="passwordForm">
+                    <div class="settings-card-head">
+                        <div class="settings-icon"><i class="fas fa-key"></i></div>
+                        <div>
+                            <h2>修改密码</h2>
+                            <p>需要输入当前密码进行校验</p>
+                        </div>
+                    </div>
+                    <div class="settings-form">
+                        <label for="oldPassword">当前密码</label>
+                        <input id="oldPassword" type="password" autocomplete="current-password" placeholder="请输入当前密码">
+                        <label for="newPassword">新密码</label>
+                        <input id="newPassword" type="password" autocomplete="new-password" placeholder="请输入新密码">
+                        <label for="confirmPassword">确认新密码</label>
+                        <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="再次输入新密码">
+                        <button type="submit">保存密码</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="settings-actions">
+                <button class="settings-logout-btn" type="button" onclick="handleLogout()">
+                    <i class="fas fa-right-from-bracket"></i>
+                    退出登录
+                </button>
+            </div>
+        `;
+
+        const nicknameForm = document.getElementById('nicknameForm');
+        const passwordForm = document.getElementById('passwordForm');
+        if (nicknameForm) nicknameForm.addEventListener('submit', handleNicknameSubmit);
+        if (passwordForm) passwordForm.addEventListener('submit', handlePasswordSubmit);
+    }
+
+    function handleNicknameSubmit(event) {
+        event.preventDefault();
+        const oldUsername = localStorage.getItem('lastUser');
+        const newNicknameInput = document.getElementById('newNickname');
+        const newUsername = newNicknameInput ? newNicknameInput.value.trim() : '';
+
+        if (!oldUsername) return showToast('请先登录');
+        if (newUsername.length < 2) return showToast('昵称至少 2 个字符');
+        if (newUsername === oldUsername) return showToast('昵称没有变化');
+        if (localStorage.getItem(getUserKey(newUsername))) return showToast('该昵称已存在');
+
+        const savedUser = readUser(oldUsername);
+        if (!savedUser) return showToast('账号数据不存在，请重新登录');
+
+        savedUser.username = newUsername;
+        localStorage.setItem(getUserKey(newUsername), JSON.stringify(savedUser));
+        localStorage.removeItem(getUserKey(oldUsername));
+        renameStorageKey(`favs_${oldUsername}`, `favs_${newUsername}`);
+        renameStorageKey(`details_favs_${oldUsername}`, `details_favs_${newUsername}`);
+        localStorage.setItem('lastUser', newUsername);
+        showToast('昵称修改成功');
+        setTimeout(() => window.location.href = 'favourites.html', 800);
+    }
+
+    function handlePasswordSubmit(event) {
+        event.preventDefault();
+        const username = localStorage.getItem('lastUser');
+        const oldPassword = document.getElementById('oldPassword')?.value || '';
+        const newPassword = document.getElementById('newPassword')?.value || '';
+        const confirmPassword = document.getElementById('confirmPassword')?.value || '';
+
+        if (!username) return showToast('请先登录');
+        const savedUser = readUser(username);
+        if (!savedUser) return showToast('账号数据不存在，请重新登录');
+        if (savedUser.password !== oldPassword) return showToast('当前密码错误');
+        if (newPassword.length < 2) return showToast('新密码至少 2 个字符');
+        if (newPassword !== confirmPassword) return showToast('两次输入的新密码不一致');
+
+        savedUser.password = newPassword;
+        localStorage.setItem(getUserKey(username), JSON.stringify(savedUser));
+        event.target.reset();
+        showToast('密码修改成功');
+    }
+
+    function handleLogout() {
+        if (!confirm('确定要退出登录吗？')) return;
+        localStorage.removeItem('lastUser');
+        showToast('已退出登录');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 800);
+    }
+
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    if (backFavBtn) backFavBtn.addEventListener('click', () => window.location.href = 'favourites.html');
+    if (mobileBackFavBtn) mobileBackFavBtn.addEventListener('click', () => window.location.href = 'favourites.html');
+
+    renderAccountSettingsPage();
+    </script>
+</body>
+</html>

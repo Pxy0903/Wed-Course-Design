@@ -1,0 +1,168 @@
+/* 全局基础 & Tailwind扩展工具类 */
+@layer utilities {
+    .card-shadow {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+    .text-overflow-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2; /* 新增标准属性 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .banner-gradient {
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0.6));
+    }
+    /* =========新增移动端工具类========= */
+    .tap-none {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+/* 全局滚动平滑 + 移动端根字体适配 */
+html {
+    scroll-behavior: smooth;
+    /* 新增：移动端字体自适应 */
+    font-size: 16px;
+    @media (max-width: 768px) {
+        font-size: 14px;
+    }
+}
+/* 全局盒模型统一，移动端必备 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #f5f5f4;
+    font-family: Inter, system-ui, sans-serif;
+    color: #374151;
+    /* 新增：禁止移动端横向溢出 */
+    overflow-x: hidden;
+}
+/* 导航链接hover + 移动端触摸优化 */
+.nav-link {
+    transition: color 0.2s ease;
+    /* 新增去除点击高亮 */
+    -webkit-tap-highlight-color: transparent;
+}
+.nav-link:hover {
+    color: #0ea5e9;
+}
+/* 轮播切换透明度动画 */
+.carousel-item {
+    transition: opacity 0.7s ease-in-out;
+}
+.dot {
+    transition: background-color 0.3s;
+}
+/* 景点卡片图片缩放 */
+.spot-card img {
+    transition: transform 0.5s ease;
+    /* 新增图片自适应 */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+}
+.spot-card:hover img {
+    transform: scale(1.1);
+}
+/* 大洲快捷入口上浮动画 */
+.continent-card {
+    transition: transform 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.continent-card:hover {
+    transform: translateY(-8px);
+}
+/* 弹窗遮罩基础 */
+#detailModal {
+    transition: all 0.3s;
+}
+/* 主题按钮 */
+.btn-travel {
+    background-color: #0ea5e9;
+    transition: background-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-travel:hover {
+    background-color: #1677ff;
+}
+/* 固定导航占位修正 + 移动端高度缩小 */
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 50;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    /* 新增移动端适配 */
+    @media (max-width: 768px) {
+        padding: 4px 0;
+    }
+}
+/* ============新增媒体查询 全局移动端布局适配============ */
+/* 1. 中等屏幕适配 (760px < width <= 1024px) */
+/* 要求：只显示小星球图标，不显示文字 */
+@media screen and (min-width: 761px) and (max-width: 1024px) {
+    .brand-text {
+        display: none;
+    }
+    
+    /* 可选：稍微调整图标大小，使其在窄屏下更协调 */
+    header a.text-2xl i {
+        font-size: 1.8rem;
+    }
+}
+/* 2. 手机端通用适配 (width <= 760px) */
+/* 要求：显示图标及字样，保留跳转功能 */
+@media screen and (max-width: 760px) {
+    .brand-text {
+        display: inline-block; /* 确保文字显示 */
+    }
+    
+    /* 调整字体大小以适应手机屏幕 */
+    header a.text-2xl {
+        font-size: 1.25rem; 
+    }
+
+    /* 轮播高度降低，手机不占满屏幕 */
+    #home {
+        height: 50vh !important;
+    }
+    /* 所有板块上下内边距缩小 */
+    section {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+    /* 卡片统一内边距缩小 */
+    .spot-card .p-5 {
+        padding: 1rem !important;
+    }
+    /* 卡片图片高度降低 */
+    .spot-card .h-52 {
+        height: 12rem !important;
+    }
+    /* 大标题缩小 */
+    h2 {
+        font-size: 1.75rem !important;
+    }
+    /* 按钮增大触摸区域，方便手机点击 */
+    button, a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* 超小屏手机 375px以下 */
+@media screen and (max-width: 375px) {
+    .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    .continent-card {
+        padding: 1rem !important;
+    }
+}

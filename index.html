@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>环球名胜览胜 | 七大洲全球著名景点大全</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./login-beauty.css">
+    <!-- 1. 引入 Tailwind 并配置 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1677ff',
+                        travel: '#0ea5e9', // 确保这个颜色被定义
+                        sand: '#f5f5f4'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 2. 引入 JS -->
+    <script src="./index.js" defer></script>
+</head>
+<body>
+<!-- 导航栏 -->
+    <header>
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-travel flex items-center gap-2">
+                <i class="fa-solid fa-globe"></i>
+                <span class="brand-text">环球名胜览胜</span>
+            </a>
+
+            <!-- 桌面导航+搜索+登录 防挤压布局 -->
+            <div class="hidden md:flex items-center gap-6 shrink-0">
+                <nav class="flex items-center gap-6 shrink-0">
+                    <a href="#home" class="nav-link whitespace-nowrap">首页</a>
+                    <a href="details.html?continent=亚洲" class="nav-link whitespace-nowrap">亚洲</a>
+                    <a href="details.html?continent=欧洲" class="nav-link whitespace-nowrap">欧洲</a>
+                    <a href="details.html?continent=非洲" class="nav-link whitespace-nowrap">非洲</a>
+                    <a href="details.html?continent=北美洲" class="nav-link whitespace-nowrap">北美洲</a>
+                    <a href="details.html?continent=南美洲" class="nav-link whitespace-nowrap">南美洲</a>
+                    <a href="details.html?continent=大洋洲" class="nav-link whitespace-nowrap">大洋洲</a>
+                    <a href="details.html?continent=南极洲" class="nav-link whitespace-nowrap">南极洲</a>
+                </nav>
+                <!-- 缩小搜索框宽度 -->
+                <div class="relative shrink-0">
+                    <input id="searchInput" type="text" placeholder="搜索景点..." class="border border-gray-300 rounded-full pl-4 pr-10 py-1.5 w-44 focus:outline-travel">
+                    <button onclick="searchSpot()" class="absolute right-3 top-2 text-gray-500 hover:text-travel">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+                <!-- 登录按钮 -->
+                <button id="loginBtn" class="shrink-0 bg-travel hover:bg-primary text-white px-4 py-1.5 rounded-full transition-colors whitespace-nowrap">
+                    <i class="fa-solid fa-user mr-1"></i><span id="loginBtnText">登录</span>
+                </button>
+            </div>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="md:hidden text-xl shrink-0" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 移动端下拉菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4 border-t">
+            <div class="flex flex-col gap-3 py-3">
+                <a href="#home" class="hover:text-travel">首页</a>
+                <!-- 修改以下链接为详情页跳转 -->
+                <a href="details.html?continent=亚洲" class="hover:text-travel">亚洲</a>
+                <a href="details.html?continent=欧洲" class="hover:text-travel">欧洲</a>
+                <a href="details.html?continent=非洲" class="hover:text-travel">非洲</a>
+                <a href="details.html?continent=北美洲" class="hover:text-travel">北美洲</a>
+                <a href="details.html?continent=南美洲" class="hover:text-travel">南美洲</a>
+                <a href="details.html?continent=大洋洲" class="hover:text-travel">大洋洲</a>
+                <a href="details.html?continent=南极洲" class="hover:text-travel">南极洲</a>
+            </div>
+            <div class="relative mt-2 mb-3">
+                <input id="mobileSearch" type="text" placeholder="搜索景点..." class="w-full border rounded px-3 py-2">
+            </div>
+            <button id="mobileLoginBtn" class="w-full bg-travel hover:bg-primary text-white py-2 rounded transition-colors">
+                <i class="fa-solid fa-user mr-1"></i>登录
+            </button>
+        </div>
+    </header>
+
+    <!-- 首页轮播 完整无修改 -->
+    <section id="home" class="pt-16 relative h-[70vh] overflow-hidden">
+        <div class="carousel-container h-full w-full relative">
+            <div class="carousel-item absolute inset-0 opacity-100">
+                <div class="w-full h-full bg-cover bg-center banner-gradient flex items-center" style="background-image: url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d')">
+                    <div class="container mx-auto px-6 text-white">
+                        <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold mb-4">万里长城 · 亚洲中国</h1>
+                        <p class="text-lg md:text-xl max-w-xl">世界文化遗产，东方文明千年地标</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item absolute inset-0 opacity-0">
+        <div class="w-full h-full bg-cover bg-center banner-gradient flex items-center" style="background-image: url('./images/欧洲-images/法国埃菲尔铁塔-images/3.jpg')">
+            <div class="container mx-auto px-6 text-white">
+                <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold mb-4">埃菲尔铁塔 · 欧洲法国</h1>
+                <p class="text-lg md:text-xl max-w-xl">浪漫巴黎城市象征，全球知名钢铁建筑</p>
+            </div>
+        </div>
+    </div>
+            <div class="carousel-item absolute inset-0 opacity-0">
+                <div class="w-full h-full bg-cover bg-center banner-gradient flex items-center" style="background-image: url('https://images.unsplash.com/photo-1524820197278-540916411e20')">
+                    <div class="container mx-auto px-6 text-white">
+                        <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold mb-4">悉尼歌剧院 · 大洋洲澳洲</h1>
+                        <p class="text-lg md:text-xl max-w-xl">贝壳造型艺术殿堂，南半球标志性景观</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 w-10 h-10 rounded-full flex items-center justify-center text-white text-xl">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 w-10 h-10 rounded-full flex items-center justify-center text-white text-xl">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+                <span onclick="switchSlide(0)" class="dot w-3 h-3 rounded-full bg-white cursor-pointer"></span>
+                <span onclick="switchSlide(1)" class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer"></span>
+                <span onclick="switchSlide(2)" class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 网站介绍 & 七大洲快捷入口 -->
+    <section class="py-16 container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">探索七大洲绝美风景名胜</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">覆盖亚洲、欧洲、非洲、北美洲、南美洲、大洋洲、南极洲，每大洲精选7处世界级地标，古迹、雪山、海岛、冰川全覆盖。</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <a href="#asia" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+                <i class="fa-solid fa-mountain-city text-4xl text-red-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">亚洲</h3>
+                <p class="text-gray-500 text-sm">7处东方古迹</p>
+            </a>
+            <a href="#europe" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+                <i class="fa-solid fa-church text-4xl text-blue-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">欧洲</h3>
+                <p class="text-gray-500 text-sm">7处浪漫古堡</p>
+            </a>
+        <a href="#africa" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+        <i class="fa-solid fa-mountain-sun text-4xl text-amber-600 mb-3"></i>
+        <h3 class="text-xl font-semibold">非洲</h3>
+        <p class="text-gray-500 text-sm">7处原野秘境</p>
+    </a>
+            <a href="#north-america" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+                <i class="fa-solid fa-water text-4xl text-green-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">北美洲</h3>
+                <p class="text-gray-500 text-sm">7处峡谷湖泊</p>
+            </a>
+            <a href="#south-america" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+                <i class="fa-solid fa-tree text-4xl text-emerald-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">南美洲</h3>
+                <p class="text-gray-500 text-sm">7处雨林遗迹</p>
+            </a>
+            <a href="#oceania" class="continent-card bg-white rounded-lg p-6 text-center card-shadow">
+                <i class="fa-solid fa-ship text-4xl text-cyan-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">大洋洲</h3>
+                <p class="text-gray-500 text-sm">7处海岛天堂</p>
+            </a>
+            <a href="#antarctica" class="continent-card bg-white rounded-lg p-6 text-center card-shadow col-span-2 md:col-span-1">
+                <i class="fa-solid fa-snowflake text-4xl text-sky-500 mb-3"></i>
+                <h3 class="text-xl font-semibold">南极洲</h3>
+                <p class="text-gray-500 text-sm">7处极地奇景</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- ==================== 亚洲 7景点 ==================== -->
+    <section id="asia" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-mountain-city text-3xl text-red-500"></i>
+                <h2 class="text-3xl font-bold">亚洲 · 6大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+                <!-- 0 长城 -->
+                <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/亚洲-images/中国长城-images/1.jpg" alt="万里长城" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">中国北京及北方多省</span>
+            <h3 class="text-xl font-bold mt-2">万里长城</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界最长军事防御工程，蜿蜒群山万里巨龙</p>
+            <button onclick="openDetail('亚洲', 40)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!-- 1 泰姬陵 -->
+                <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/亚洲-images/印度泰姬陵-images/1.jpg" alt="泰姬陵" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-amber-100 text-amber-600 text-xs px-2 py-1 rounded">印度阿格拉</span>
+            <h3 class="text-xl font-bold mt-2">泰姬陵</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">纯白大理石帝王陵墓，莫卧儿建筑艺术巅峰代表</p>
+            <button onclick="openDetail('亚洲', 39)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!-- 2 富士山 -->
+                <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/亚洲-images/日本富士山-images/1.jpg" alt="富士山" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">日本静冈县</span>
+            <h3 class="text-xl font-bold mt-2">富士山</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">日本象征活火山，完美锥形雪山，搭配山下湖泊倒影绝美</p>
+            <button onclick="openDetail('亚洲', 36)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!-- 3 土耳其圣索菲亚大教堂 -->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/亚洲-images/土耳其圣索菲亚大教堂-images/1.jpg" alt="圣索菲亚大教堂" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded">土耳其伊斯坦布尔</span>
+            <h3 class="text-xl font-bold mt-2">圣索菲亚大教堂</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">千年宗教建筑，拜占庭巨型穹顶融合基督教与伊斯兰艺术</p>
+            <button onclick="openDetail('亚洲', 37)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+    <!-- 1 菲律宾巧克力山-->
+                <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/亚洲-images/菲律宾巧克力山-images/1.jpg" alt="菲律宾巧克力山" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded">薄荷岛内陆</span>
+                        <h3 class="text-xl font-bold mt-2">菲律宾巧克力山</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">草皮枯黄变成深咖啡色，看上去像一排排巧克力，因此得名。</p>
+                        <button onclick="openDetail('亚洲', 35)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+                <!-- 2 死海 -->
+                <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/亚洲-images/以色列死海-images/1.jpg" alt="死海" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">以色列、约旦耶路撒冷周边</span>
+            <h3 class="text-xl font-bold mt-2">死海</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">地球陆地最低点，超高盐度湖水可自然漂浮不沉</p>
+            <button onclick="openDetail('亚洲', 38)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+        </div>
+    </section>
+
+    <!-- ==================== 欧洲 5景点 ==================== -->
+    <section id="europe" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-cathedral text-3xl text-blue-500"></i>
+                <h2 class="text-3xl font-bold">欧洲 · 5大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+                <!--7 埃菲尔铁塔-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/欧洲-images/法国埃菲尔铁塔-images/1.jpg" alt="埃菲尔铁塔" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">法国巴黎</span>
+            <h3 class="text-xl font-bold mt-2">埃菲尔铁塔</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">巴黎城市地标钢铁塔，整点灯光闪烁浪漫夜景</p>
+            <button onclick="openDetail('欧洲', 30)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--8 罗马斗兽场-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/欧洲-images/意大利罗马斗兽场-images/1.jpg" alt="罗马斗兽场" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">意大利罗马</span>
+            <h3 class="text-xl font-bold mt-2">罗马斗兽场</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">古罗马最大圆形角斗场，千年残垣见证帝国历史</p>
+            <button onclick="openDetail('欧洲', 33)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!-- 1. 希腊雅典卫城 -->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/欧洲-images/希腊雅典卫城-images/1.jpg" alt="雅典卫城" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-amber-100 text-amber-600 text-xs px-2 py-1 rounded">希腊雅典</span>
+            <h3 class="text-xl font-bold mt-2">雅典卫城</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">古希腊文明巅峰建筑群，帕特农神庙屹立山顶千年</p>
+            <button onclick="openDetail('欧洲', 31)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+                <!-- 2. 英国巨石阵 -->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/欧洲-images/英国巨石阵-images/1.jpg" alt="英国巨石阵" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">英国索尔兹伯里</span>
+            <h3 class="text-xl font-bold mt-2">英国巨石阵</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">史前巨型石环遗迹，古人天文祭祀神秘建筑</p>
+            <button onclick="openDetail('欧洲', 34)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+                
+                <!-- 5. 意大利比萨斜塔 -->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/欧洲-images/意大利比萨斜塔-images/1.jpg" alt="意大利比萨斜塔" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">意大利比萨</span>
+            <h3 class="text-xl font-bold mt-2">意大利比萨斜塔</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">地基沉降形成倾斜钟楼，经典错位建筑奇观</p>
+            <button onclick="openDetail('欧洲', 32)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 非洲 7景点 ==================== -->
+    <section id="africa" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-camel text-3xl text-amber-600"></i>
+                <h2 class="text-3xl font-bold">非洲 · 7大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+            <!--14 埃及吉萨金字塔群-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/埃及吉萨金字塔群-images/1.jpg" alt="吉萨金字塔群" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">埃及开罗</span>
+            <h3 class="text-xl font-bold mt-2">吉萨金字塔群</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界七大奇迹唯一现存建筑，古埃及法老陵墓建筑群</p>
+            <button onclick="openDetail('非洲', 13)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--15 纳米比亚索苏斯盐沼-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/纳米比亚索苏斯盐沼-images/1.jpg" alt="索苏斯盐沼" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">纳米比亚纳米布沙漠</span>
+            <h3 class="text-xl font-bold mt-2">索苏斯盐沼</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">红色沙丘，荒漠魔幻地貌</p>
+            <button onclick="openDetail('非洲', 14)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--16 南非桌山-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/南非桌山-images/1.jpg" alt="南非开普敦桌山" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">南非开普敦</span>
+            <h3 class="text-xl font-bold mt-2">南非开普敦桌山</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">平顶巨型石山，俯瞰开普敦全城与大西洋海湾</p>
+            <button onclick="openDetail('非洲', 15)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--17 坦桑尼亚塞伦盖蒂国家公园-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/坦桑尼亚塞伦盖蒂国家公园-images/1.jpg" alt="塞伦盖蒂国家公园" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded">坦桑尼亚阿鲁沙</span>
+            <h3 class="text-xl font-bold mt-2">塞伦盖蒂国家公园</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">非洲野生动物大迁徙核心场地，百万角马斑马年度迁徙奇观</p>
+            <button onclick="openDetail('非洲', 16)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--18 突尼斯埃尔·杰姆斗兽场-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/突尼斯埃尔·杰姆斗兽场-images/1.jpg" alt="埃尔·杰姆斗兽场" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded">突尼斯杰姆镇</span>
+            <h3 class="text-xl font-bold mt-2">埃尔·杰姆斗兽场</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">非洲最大古罗马斗兽场，巨型石砌拱廊保存完好，气势恢宏</p>
+            <button onclick="openDetail('非洲', 17)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--19 赞比亚津巴布韦维多利亚瀑布-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/非洲-images/赞比亚津巴布韦维多利亚瀑布-images/1.jpg" alt="维多利亚瀑布" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">赞比亚津巴布韦交界</span>
+            <h3 class="text-xl font-bold mt-2">维多利亚瀑布</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界三大瀑布之一，宽1700米，水雾升腾数十里可见，又称“咆哮之烟”</p>
+            <button onclick="openDetail('非洲', 18)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 北美洲 7景点 ==================== -->
+    <section id="north-america" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-water text-3xl text-green-500"></i>
+                <h2 class="text-3xl font-bold">北美洲 · 7大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+                <!--21 大峡谷国家公园-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/美国大峡谷国家公园-images/1.jpg" alt="大峡谷国家公园" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">美国亚利桑那州</span>
+            <h3 class="text-xl font-bold mt-2">大峡谷国家公园</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">科罗拉多河切割形成的巨型峡谷，亿万年地质层色彩斑斓</p>
+            <button onclick="openDetail('北美洲', 3)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--22 尼亚加拉大瀑布-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/加拿大尼亚加拉瀑布-images/1.jpg" alt="尼亚加拉大瀑布" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">加拿大安大略省</span>
+            <h3 class="text-xl font-bold mt-2">尼亚加拉大瀑布</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界三大跨国瀑布之一，水流磅礴，昼夜景观极具冲击力</p>
+            <button onclick="openDetail('北美洲', 2)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--23 奇琴伊察库库尔坎金字塔-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/墨西哥奇琴伊察-images/1.jpg" alt="奇琴伊察库库尔坎金字塔" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">墨西哥尤卡坦州</span>
+            <h3 class="text-xl font-bold mt-2">奇琴伊察库库尔坎金字塔</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">玛雅文明核心古城遗址，库库尔坎金字塔融合古老天文历法</p>
+            <button onclick="openDetail('北美洲', 7)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--24 黄石国家公园-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/美国黄石国家公园-images/1.jpg" alt="黄石国家公园" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">美国怀俄明州</span>
+            <h3 class="text-xl font-bold mt-2">黄石国家公园</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界首个国家公园，地热温泉、间歇泉景观全球闻名</p>
+            <button onclick="openDetail('北美洲', 5)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--25 自由女神像-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/美国自由女神像-images/1.jpg" alt="自由女神像" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">美国纽约</span>
+            <h3 class="text-xl font-bold mt-2">自由女神像</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">法国赠予美国的标志性雕塑，自由精神的文化符号</p>
+            <button onclick="openDetail('北美洲', 6)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--26 班夫国家公园路易斯湖-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/加拿大班夫国家公园-images/1.jpg" alt="加拿大班夫国家公园" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">加拿大阿尔伯塔省</span>
+            <h3 class="text-xl font-bold mt-2">加拿大班夫国家公园</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">加拿大历史最悠久的国家公园，落基山脉绝美风光胜地</p>
+            <button onclick="openDetail('北美洲', 1)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+                <!--27 德纳理国家公园-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/北美洲-images/美国德纳理国家公园-images/1.jpg" alt="德纳理国家公园" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">美国阿拉斯加州</span>
+            <h3 class="text-xl font-bold mt-2">德纳理国家公园</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">北美最高峰所在地，原始极地苔原荒野风光纯粹原生态</p>
+            <button onclick="openDetail('北美洲', 4)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 南美洲 7景点 ==================== -->
+    <section id="south-america" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-tree text-3xl text-emerald-500"></i>
+                <h2 class="text-3xl font-bold">南美洲 · 7大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+            <!--28 秘鲁马丘比丘-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/秘鲁马丘比丘-images/1.jpg" alt="马丘比丘" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">秘鲁库斯科</span>
+            <h3 class="text-xl font-bold mt-2">马丘比丘</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">云端印加古城，山脊上古石城被群山云雾环绕</p>
+            <button onclick="openDetail('南美洲', 27)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--29 巴西里约热内卢基督像-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/巴西里约热内卢基督像-images/1.jpg" alt="里约基督救世主雕像" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">巴西里约热内卢</span>
+            <h3 class="text-xl font-bold mt-2">里约基督救世主雕像</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">巨型耶稣雕塑张开双臂俯瞰全城，里约城市象征地标</p>
+            <button onclick="openDetail('南美洲', 24)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--30 阿根廷/巴西伊瓜苏瀑布-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/阿根廷巴西伊瓜苏瀑布-images/1.jpg" alt="伊瓜苏大瀑布" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">阿根廷、巴西伊瓜苏市</span>
+            <h3 class="text-xl font-bold mt-2">伊瓜苏大瀑布</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界最宽瀑布群，魔鬼咽喉峡谷瀑布气势磅礴</p>
+            <button onclick="openDetail('南美洲', 23)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--31 智利复活节岛-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/智利复活节岛-images/1.jpg" alt="复活节岛摩艾石像" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">智利复活节岛</span>
+            <h3 class="text-xl font-bold mt-2">复活节岛摩艾石像</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">孤岛巨型摩艾石像，神秘远古波利尼西亚文明遗迹</p>
+            <button onclick="openDetail('南美洲', 29)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--32 厄瓜多尔加拉帕戈斯群岛-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/厄瓜多尔加拉帕戈斯群岛-images/1.jpg" alt="加拉帕戈斯群岛" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">厄瓜多尔圣克鲁斯岛</span>
+            <h3 class="text-xl font-bold mt-2">加拉帕戈斯群岛</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">生物进化活博物馆，特有巨龟、海鬣蜥独有物种遍布群岛</p>
+            <button onclick="openDetail('南美洲', 26)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--33 玻利维亚乌尤尼盐沼-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/玻利维亚乌尤尼盐沼-images/1.jpg" alt="乌尤尼盐沼天空之镜" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">玻利维亚乌尤尼</span>
+            <h3 class="text-xl font-bold mt-2">乌尤尼盐沼天空之镜</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">世界最大盐湖，旱季纯白盐壳一望无际，雨季积水形成镜面效果</p>
+            <button onclick="openDetail('南美洲', 25)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+
+    <!--34 秘鲁纳斯卡巨画-->
+    <div class="spot-card bg-sand rounded-xl overflow-hidden card-shadow cursor-pointer">
+        <div class="h-52 overflow-hidden">
+            <img src="./images/南美洲-images/秘鲁纳斯卡巨画-images/1.jpg" alt="纳斯卡沙漠巨画" class="w-full h-full object-cover">
+        </div>
+        <div class="p-5">
+            <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">秘鲁纳斯卡镇</span>
+            <h3 class="text-xl font-bold mt-2">纳斯卡沙漠巨画</h3>
+            <p class="text-gray-600 mt-2 text-overflow-2">荒漠巨型地面图案，飞鸟走兽几何图形只能高空俯瞰</p>
+            <button onclick="openDetail('南美洲', 28)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+        </div>
+    </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== 大洋洲 7景点 ==================== -->
+    <!-- ==================== 大洋洲 7景点 ==================== -->
+    <!-- ==================== 大洋洲 5景点 ==================== -->
+    <section id="oceania" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-ship text-3xl text-cyan-500"></i>
+                <h2 class="text-3xl font-bold">大洋洲 · 5大著名景点</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+
+                <!--35 澳大利亚大堡礁-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/大洋洲-images/澳大利亚大堡礁-images/1.jpg" alt="大堡礁" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">澳大利亚昆士兰州</span>
+                        <h3 class="text-xl font-bold mt-2">大堡礁</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">世界最大珊瑚礁系统，绵延2300公里，海底物种极其丰富</p>
+                        <button onclick="openDetail('大洋洲', 8)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--36 澳大利亚悉尼歌剧院-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/大洋洲-images/澳大利亚悉尼歌剧院-images/1.jpg" alt="悉尼歌剧院" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">澳大利亚悉尼</span>
+                        <h3 class="text-xl font-bold mt-2">悉尼歌剧院</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">贝壳造型世界级建筑地标，悉尼港湾核心人文景观</p>
+                        <button onclick="openDetail('大洋洲', 9)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--37 斐济群岛-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/大洋洲-images/斐济群岛-images/1.jpg" alt="斐济群岛" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-emerald-100 text-emerald-600 text-xs px-2 py-1 rounded">斐济</span>
+                        <h3 class="text-xl font-bold mt-2">斐济群岛</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">南太平洋十字路口，333座珊瑚海岛组成的度假天堂</p>
+                        <button onclick="openDetail('大洋洲', 10)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--38 澳大利亚墨尔本涂鸦街-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/大洋洲-images/墨尔本涂鸦街-images/1.jpg" alt="墨尔本涂鸦街" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded">澳大利亚墨尔本</span>
+                        <h3 class="text-xl font-bold mt-2">墨尔本涂鸦街</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">南半球街头艺术圣地，霍西尔巷道充满创意涂鸦与艺术气息</p>
+                        <button onclick="openDetail('大洋洲', 11)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--39 新西兰汤加里罗国家公园-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/大洋洲-images/新西兰汤加里罗国家公园-images/1.jpg" alt="汤加里罗国家公园" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">新西兰北岛</span>
+                        <h3 class="text-xl font-bold mt-2">汤加里罗国家公园</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">新西兰首座国家公园，三座活火山巍峨矗立，毛利文化圣地</p>
+                        <button onclick="openDetail('大洋洲', 12)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- ==================== 南极洲 7景点 ==================== -->
+    <!-- ==================== 南极洲 7景点 ==================== -->
+    <section id="antarctica" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3 mb-10">
+                <i class="fa-solid fa-snowflake text-3xl text-sky-500"></i>
+                <h2 class="text-3xl font-bold">南极洲 · 7大极地奇景</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 spot-list">
+
+                <!--1 利马水道-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/南极洲-images/利马水道-images/1.jpg" alt="利马水道" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">南极半岛</span>
+                        <h3 class="text-xl font-bold mt-2">利马水道</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">南极最壮观航道，两侧雪山冰川倒映如镜，被誉为“柯达杀手”</p>
+                        <button onclick="openDetail('南极洲', 19)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--2 欺骗岛-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/南极洲-images/欺骗岛-images/1.jpg" alt="欺骗岛" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">南设得兰群岛</span>
+                        <h3 class="text-xl font-bold mt-2">欺骗岛</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">活火山口形成环形港湾，南极唯一可泡天然温泉的奇幻之地</p>
+                        <button onclick="openDetail('南极洲', 20)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--3 天堂湾-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/南极洲-images/天堂湾-images/1.jpg" alt="天堂湾" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">南极半岛</span>
+                        <h3 class="text-xl font-bold mt-2">天堂湾</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">南极最美港湾，冰川环绕、鲸鱼游弋，名副其实的冰雪天堂</p>
+                        <button onclick="openDetail('南极洲', 21)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+                <!--4 血瀑布-->
+                <div class="spot-card bg-white rounded-xl overflow-hidden card-shadow cursor-pointer">
+                    <div class="h-52 overflow-hidden">
+                        <img src="./images/南极洲-images/血瀑布-images/1.jpg" alt="血瀑布" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <span class="bg-sand text-gray-600 text-xs px-2 py-1 rounded">南极洲麦克默多干谷</span>
+                        <h3 class="text-xl font-bold mt-2">血瀑布</h3>
+                        <p class="text-gray-600 mt-2 text-overflow-2">冰川流出铁锈红色液体，富含氧化铁的超盐湖水奇观</p>
+                        <button onclick="openDetail('南极洲', 22)" class="mt-4 text-travel hover:underline flex items-center gap-1">查看详情 <i class="fa-solid fa-arrow-right text-sm"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 【新增】在 body 底部添加登录弹窗结构 -->
+    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+        <div class="login-card-blue">
+            <button id="closeLogin" class="lb-close" type="button" aria-label="关闭登录弹窗">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            <div class="lb-header">
+                <div class="lb-icon-box">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <div class="lb-header-text">
+                    <h2>用户登录</h2>
+                    <p>输入账号即可体验登录流程</p>
+                </div>
+            </div>
+            <div class="lb-tabs" aria-label="登录方式切换">
+                <button class="lb-tab active" type="button">登录</button>
+                <button class="lb-tab" type="button">注册</button>
+            </div>
+            <form id="loginForm">
+                <div class="lb-field">
+                    <label class="lb-label" for="usernameInput">用户名</label>
+                    <div class="lb-input-wrap">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="usernameInput" class="lb-input" placeholder="请输入用户名" required>
+                    </div>
+                </div>
+                <div class="lb-field">
+                    <label class="lb-label" for="passwordInput">密码</label>
+                    <div class="lb-input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="passwordInput" class="lb-input" placeholder="请输入密码" required>
+                    </div>
+                </div>
+                <button type="submit" class="lb-btn">
+                    立即登录
+                </button>
+            </form>
+            <p class="lb-tip">
+                提示：任意输入即可模拟登录体验
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
